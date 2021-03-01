@@ -1,7 +1,7 @@
 # SURF'S UP
 
 ## Overview
-Analyzing temperature data for the months of June and December in Oahu, in order to determine if the surf and ice cream shop business is sustainable in Hawaii year-round. 
+Analyzing temperature data for the months of June and December in Oahu, in order to determine if a surf and ice cream shop business is sustainable in Hawaii year-round. 
 
 ### Purpose
 
@@ -12,7 +12,7 @@ The purpose of this project is to:
 
 ### Analysis
 
-Data Source: Hawaii SQLite Database [Hawaii Database](hawaii.sqlite)
+Data Source: [Hawaii SQLite Database](hawaii.sqlite)
 
 Software used: Python 3.7.6, Pandas, Jupyter Notebooks, SQLAlchemy, Numpy
 
@@ -37,3 +37,20 @@ The summary temperature statistics are shown in the tables below:
 ### Summary
 [comment]: <> (There is a high-level summary of the results and there are two additional queries to perform to gather more weather data for June and December.)
 
+From the above temperature analysis results, it is evident that Oahu temperatures are quite similar throughout the year. However, to determine if a surf and ice cream shop business is sustainable in Oahu, more weather data should considered in the analysis. For example, analyzing the precipitation, cloud cover, wind speeds/direction and tide heights data. 
+
+##### Analyzing Precipitation 
+The following query can be used to analyze average precipitation in June. (It can be refactored to also find average precipitation in December)
+
+    June_prcp = session.query(Measurement.prcp).\
+    filter(extract('month', Measurement.date) == 6).all()
+    June_prcp_list = [p for p in June_prcp for p in p]
+    June_prcp_df = pd.DataFrame(June_prcp)
+    June_prcp_df.describe()
+
+##### Analyzing Precipitation And Temperature by Location 
+Analysis can also be done on precipitation and temperature by location. But first, we can join the two tables like so: 
+
+    df = pd.DataFrame(session.query(Measurement, Station).filter(Measurement.id == Station.id).all())
+
+Various queries can be run using GROUP BY and ORDER BY latitudes and longitudes to get summaries on temperature and precipitation data by location. 
